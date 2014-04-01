@@ -281,6 +281,11 @@ public class SecurityCache {
         Credentials c = new Credentials(auth, key);
         String user = userByCredential.get(c);
 
+        if (user == null || user.isEmpty()) {
+            log.warn("Can't find user for {}/{}", auth, key);
+            return false;
+        }
+
         List<String> groups = groups4users.get(user);
 
         if (groups != null) {
@@ -296,13 +301,6 @@ public class SecurityCache {
             }
         }
 
-
-        if (user == null || user.isEmpty()) {
-            log.warn("Can't find user for {}/{}", auth, key);
-            return false;
-        }
-
-        log.debug("Checking security for user {}", user);
         Map<Objects, OperationProfile> cachedObject = userSecurity.get(user);
 
         if (cachedObject == null || cachedObject.isEmpty()) {
@@ -312,6 +310,8 @@ public class SecurityCache {
 
         Objects objects = new Objects(objName, type);
         OperationProfile operations = cachedObject.get(objects);
+
+        log.debug("Checking security for user {} on {}", user, objName);
 
         if (operations == null) {
             log.warn("Any operations are forbidden for {} and {}", user, objName);

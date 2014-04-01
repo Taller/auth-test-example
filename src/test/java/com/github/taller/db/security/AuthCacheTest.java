@@ -1,9 +1,14 @@
 package com.github.taller.db.security;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Author: Ivan A. Ivanchikov (taller@github.com)
@@ -14,8 +19,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = "classpath:context-test.xml")
 public class AuthCacheTest {
 
+    @Autowired
+    AuthCache cache;
+
+
     @Test
     public void test() {
-
+        ExecutorService executor = Executors.newFixedThreadPool(150);
+        for (int i = 0; i < 1000; i++) {
+            Runnable worker = new AuthWorker(cache, 1000000);
+            executor.execute(worker);
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
     }
 }

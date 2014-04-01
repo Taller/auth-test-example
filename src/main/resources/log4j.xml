@@ -21,9 +21,12 @@
         <level value="INFO"/>
     </logger>
 
-    <!--<logger name="org.apache">-->
-        <!--<level value="INFO"/>-->
-    <!--</logger>-->
+    <logger name="com.github.taller.db.security.AuthWorker">
+        <level value="WARN"/>
+    </logger>
+    <logger name="com.github.taller.db.security.SecurityWorker">
+        <level value="WARN"/>
+    </logger>
     <logger name="org.springframework">
         <level value="INFO"/>
     </logger>
